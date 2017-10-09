@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using System.IO;
 using System.Text;
-using System.Web.Script.Serialization;
+using Newtonsoft.Json;
 
 namespace SOASerialization
 {
@@ -37,6 +37,8 @@ namespace SOASerialization
                     outString = outString.Remove(
                         outString.IndexOf(' ')
                         ,outString.IndexOf('>', outString.IndexOf(' '))  - outString.IndexOf(' '));
+                    outString = outString.Replace(" ", string.Empty);
+                    outString = outString.Replace(Environment.NewLine, string.Empty);
 
                     //Console.WriteLine(XMLSTR);
                     Console.Write(outString);
@@ -50,11 +52,9 @@ namespace SOASerialization
                         sb.Append(line);
                     }
 
-                    JavaScriptSerializer Json = new JavaScriptSerializer();
-
-                    inData = (Input)Json.Deserialize(sb.ToString(), typeof(Input));
+                    inData = JsonConvert.DeserializeObject<Input>(sb.ToString());
                     outData = InputToOutputFunc(inData);
-                    var outStr = Json.Serialize(outData);
+                    var outStr = JsonConvert.SerializeObject(outData);
 
                     //Console.WriteLine(JSONSTR);
                     Console.Write(outStr);
