@@ -48,9 +48,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Input.cs" />
+    <Compile Include="ISerializer.cs" />
+    <Compile Include="JsonSer.cs" />
     <Compile Include="Output.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="XmlSer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

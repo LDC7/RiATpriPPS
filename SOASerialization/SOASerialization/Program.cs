@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Xml.Serialization;
-using System.IO;
 using System.Text;
-using Newtonsoft.Json;
 
 namespace SOASerialization
 {
@@ -16,51 +13,37 @@ namespace SOASerialization
 
             Input inData;
             Output outData;
-            string type = Console.ReadLine();
+            var type = Console.ReadLine();
+            ISerializer Ser;
 
             switch (type)
             {
                 case XMLSTR:
-                    XmlSerializer Xml = new XmlSerializer(typeof(Input));
-
-                    inData = (Input)Xml.Deserialize(Console.In);
-
-                    outData = InputToOutputFunc(inData);
-
-                    Xml = new XmlSerializer(typeof(Output));
-                    MemoryStream stream = new MemoryStream();
-                    Xml.Serialize(stream, outData);
-
-                    stream.Position = 0;
-                    string outString = (new StreamReader(stream)).ReadToEnd();
-                    outString = outString.Substring(outString.IndexOf('<', 1));
-                    outString = outString.Remove(
-                        outString.IndexOf(' ')
-                        ,outString.IndexOf('>', outString.IndexOf(' '))  - outString.IndexOf(' '));
-                    outString = outString.Replace(" ", string.Empty);
-                    outString = outString.Replace(Environment.NewLine, string.Empty);
-
-                    //Console.WriteLine(XMLSTR);
-                    Console.Write(outString);
+                    Ser = new XmlSer();
                     break;
 
                 case JSONSTR:
-                    var sb = new StringBuilder();
-                    string line;
-                    while ((line = Console.ReadLine()) != null)
-                    {
-                        sb.Append(line);
-                    }
-
-                    inData = JsonConvert.DeserializeObject<Input>(sb.ToString());
-                    outData = InputToOutputFunc(inData);
-                    var outStr = JsonConvert.SerializeObject(outData);
-
-                    //Console.WriteLine(JSONSTR);
-                    Console.Write(outStr);
+                    Ser = new JsonSer();
                     break;
+
+                default:
+                    throw new ArgumentException();
             }
 
+            var sb = new StringBuilder();
+            string line;
+            while ((line = Console.ReadLine()) != null)
+            {
+                sb.Append(line);
+            }
+
+            inData = Ser.Deserialize<Input>(sb.ToString());
+
+            outData = InputToOutputFunc(inData);
+
+            string outStr = Ser.Serialize<Output>(outData);
+
+            Console.Write(outStr);
             Console.ReadKey();
         }
 
