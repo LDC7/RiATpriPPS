@@ -6,6 +6,7 @@ namespace SOASerialization
 {
     public class Program
     {
+        //todo: выделите отдельный интерфейс ISerializer {}  и уберите туда всю логику сериализации, для xml сделайте одну реалзиацию для json другую
         public static void Main(string[] args)
         {
             const string XMLSTR = "Xml";
