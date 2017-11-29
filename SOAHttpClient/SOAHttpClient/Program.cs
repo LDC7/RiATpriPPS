@@ -19,6 +19,7 @@ namespace SOAHttpClient
             {
                 if (http.Ping(host, port))
                 {
+                    //todo: воспользуйтесь сериализатором ISerializer из первой лабораторнойб а не вызывайте напрямую джсо здесь
                     inData = JsonSerializator.Deserialize<Input>(System.Text.Encoding.UTF8.GetString(http.GetInputData(host, port)));
                     outData = InputToOutputFunc(inData);
                     http.WriteAnswer(host, port, Encoding.UTF8.GetBytes(JsonSerializator.Serialize(outData)));

@@ -4,6 +4,7 @@ using System.Net;
 
 namespace SOAHttpClient
 {
+    //todo: выделите базвовый класс HttpClientBase в котором будет логика работы с хттп, здесь должны быть только функции Ping, GetInputData, WriteAnswer
     public class HttpClient
     {
         public bool Ping(string host, int port)

@@ -10,6 +10,7 @@ namespace Listener
     public class HttpListenerImpl : HttpListenerBase
     {
         private Queue answersQueue;
+        //todo: переведите это на COncurrentDictionary, кода станет гораждо меньше
         private MethodInfo[] methods;
 
         public HttpListenerImpl(string host, string port) : base(host, port)
