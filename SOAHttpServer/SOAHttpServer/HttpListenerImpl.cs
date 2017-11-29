@@ -1,33 +1,32 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Net;
 using System.Reflection;
 using SOASerialization;
-using System.Collections.Generic;
 
 namespace Listener
 {
     public class HttpListenerImpl : HttpListenerBase
     {
         private Queue answersQueue;
-        //todo: переведите это на COncurrentDictionary, кода станет гораждо меньше
-        private MethodInfo[] methods;
+        ConcurrentDictionary<string, MethodInfo> methods;
 
         public HttpListenerImpl(string host, string port) : base(host, port)
         {
             answersQueue = new Queue();
-            methods = typeof(HttpListenerImpl).GetMethods(BindingFlags.Instance | BindingFlags.NonPublic);
+            methods = new ConcurrentDictionary<string, MethodInfo>(from m in typeof(HttpListenerImpl).GetMethods(BindingFlags.Instance | BindingFlags.NonPublic)
+                                                                   select new KeyValuePair<string, MethodInfo>(m.Name, m));
         }
 
         protected override void ProcessQuery(string methodName, HttpListener httpListener)
         {
-            var method = from m in methods
-                         where m.Name == methodName
-                         select m;
+            MethodInfo method;
 
-            if (method.Count() > 0)
+            if (methods.TryGetValue(methodName, out method))
             {
-                method.First().Invoke(this, new object[0]);
+                method.Invoke(this, new object[0]);
             }
             else
             {

@@ -6,30 +6,12 @@ namespace SOASerialization
 {
     public class Program
     {
-        //todo: выделите отдельный интерфейс ISerializer {}  и уберите туда всю логику сериализации, для xml сделайте одну реалзиацию для json другую
         public static void Main(string[] args)
         {
-            const string XMLSTR = "Xml";
-            const string JSONSTR = "Json";
-
             Input inData;
             Output outData;
             var type = Console.ReadLine();
-            ISerializer Ser;
-
-            switch (type)
-            {
-                case XMLSTR:
-                    Ser = new XmlSer();
-                    break;
-
-                case JSONSTR:
-                    Ser = new JsonSer();
-                    break;
-
-                default:
-                    throw new ArgumentException();
-            }
+            ISerializer Ser = SerializerFactory.GetSerializer(type);
 
             var sb = new StringBuilder();
             string line;

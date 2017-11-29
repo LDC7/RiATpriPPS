@@ -2,8 +2,7 @@
 using System.Collections.Specialized;
 using System.IO;
 using System.Net;
-using System.Text;
-using Serializer;
+using SOASerialization;
 
 namespace Listener
 {
@@ -17,7 +16,7 @@ namespace Listener
 
         public HttpListenerBase(string host, string port)
         {
-            serializer = new Serializer.Serializer();
+            serializer = SerializerFactory.GetSerializer("Json");
             this.host = host;
             this.port = port;
         }
@@ -45,7 +44,7 @@ namespace Listener
             WriteToResponse(HttpStatusCode.OK, string.Empty);
         }
 
-        protected void Stop()
+        public void Stop()
         {
             if(httpListener != null && httpListener.IsListening)
             {
@@ -66,7 +65,7 @@ namespace Listener
             using (var sr = new StreamReader(context.Request.InputStream))
             {
                 var bodyStr = sr.ReadToEnd();
-                return serializer.Deserialize<T>(Encoding.UTF8.GetBytes(bodyStr));
+                return serializer.Deserialize<T>(bodyStr);
             }
         }
 
@@ -81,7 +80,7 @@ namespace Listener
 
         protected void WriteToResponse<T>(HttpStatusCode httpStatusCode, T response)
         {
-            WriteToResponse(httpStatusCode, Encoding.UTF8.GetString(serializer.Serialize(response)));
+            WriteToResponse(httpStatusCode, serializer.Serialize(response));
         }
 
         protected static string GetMethodName(string uri)

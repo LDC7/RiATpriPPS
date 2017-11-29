@@ -48,16 +48,18 @@
     <Compile Include="HttpListenerBase.cs" />
     <Compile Include="HttpListenerImpl.cs" />
     <Compile Include="IHttpListener.cs" />
-    <Compile Include="Input.cs" />
-    <Compile Include="ISerializer.cs" />
-    <Compile Include="Output.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Serializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SOASerialization\SOASerialization.csproj">
+      <Project>{56fc7339-f567-49c5-9b20-0902135c1700}</Project>
+      <Name>SOASerialization</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
